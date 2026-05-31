@@ -1,0 +1,654 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>白渡听香 - 边城主题文化体验店</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;700&family=ZCOOL+XiaoWei&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --color-primary: #7BA89C;
+      --color-secondary: #B8D4CD;
+      --color-bg: #E8F4F2;
+      --color-bg-light: #F5FAF9;
+      --color-white: #FAF9F6;
+      --color-ink: #2C3E3A;
+      --color-ink-light: #4A5E5A;
+      --shadow-soft: 0 8px 32px rgba(44, 62, 58, 0.08);
+      --shadow-card: 0 4px 24px rgba(44, 62, 58, 0.06);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Noto Serif SC', serif;
+      background: linear-gradient(180deg, var(--color-bg-light) 0%, var(--color-bg) 50%, var(--color-bg-light) 100%);
+      color: var(--color-ink);
+      line-height: 1.8;
+      overflow-x: hidden;
+    }
+
+    .page-container {
+      position: relative;
+      min-height: 100vh;
+    }
+
+    .hero-section {
+      position: relative;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 2rem;
+      transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+      z-index: 10;
+    }
+
+    .hero-section.fade-out {
+      opacity: 0;
+      transform: translateY(-30px);
+      pointer-events: none;
+    }
+
+    .main-title {
+      font-family: 'ZCOOL XiaoWei', serif;
+      font-size: clamp(4rem, 12vw, 8rem);
+      font-weight: 400;
+      letter-spacing: 0.5em;
+      color: var(--color-ink);
+      text-shadow: 2px 2px 4px rgba(123, 168, 156, 0.2);
+      margin-bottom: 2rem;
+      animation: titleReveal 1.5s ease-out;
+    }
+
+    @keyframes titleReveal {
+      0% {
+        opacity: 0;
+        letter-spacing: 1em;
+      }
+      100% {
+        opacity: 1;
+        letter-spacing: 0.5em;
+      }
+    }
+
+    .subtitle {
+      font-size: clamp(0.9rem, 2vw, 1.1rem);
+      color: var(--color-ink-light);
+      max-width: 600px;
+      line-height: 2.2;
+      opacity: 0;
+      animation: subtitleFadeIn 1s ease-out 0.8s forwards;
+      font-weight: 400;
+    }
+
+    @keyframes subtitleFadeIn {
+      to {
+        opacity: 0.85;
+      }
+    }
+
+    .scroll-hint {
+      position: absolute;
+      bottom: 3rem;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      opacity: 0;
+      animation: scrollHintFade 1s ease-out 1.5s forwards;
+    }
+
+    @keyframes scrollHintFade {
+      to {
+        opacity: 0.6;
+      }
+    }
+
+    .scroll-hint span {
+      font-size: 0.85rem;
+      color: var(--color-primary);
+      letter-spacing: 0.2em;
+    }
+
+    .scroll-icon {
+      width: 24px;
+      height: 40px;
+      border: 2px solid var(--color-primary);
+      border-radius: 12px;
+      position: relative;
+    }
+
+    .scroll-icon::before {
+      content: '';
+      position: absolute;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 4px;
+      height: 8px;
+      background: var(--color-primary);
+      border-radius: 2px;
+      animation: scrollDot 2s ease-in-out infinite;
+    }
+
+    @keyframes scrollDot {
+      0%, 100% {
+        opacity: 1;
+        top: 8px;
+      }
+      50% {
+        opacity: 0.3;
+        top: 20px;
+      }
+    }
+
+    .river-axis {
+      position: fixed;
+      left: 50%;
+      top: 0;
+      transform: translateX(-50%);
+      width: 4px;
+      height: 100vh;
+      z-index: 1;
+      opacity: 0;
+      transition: opacity 0.5s ease;
+    }
+
+    .river-axis.visible {
+      opacity: 1;
+    }
+
+    .river-line {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        180deg,
+        transparent 0%,
+        var(--color-secondary) 15%,
+        var(--color-primary) 30%,
+        var(--color-secondary) 50%,
+        var(--color-primary) 70%,
+        var(--color-secondary) 85%,
+        transparent 100%
+      );
+      opacity: 0.4;
+    }
+
+    .river-wave {
+      position: absolute;
+      width: 200%;
+      left: -50%;
+      height: 100%;
+      background: repeating-linear-gradient(
+        90deg,
+        transparent 0px,
+        rgba(123, 168, 156, 0.1) 20px,
+        transparent 40px
+      );
+      animation: riverFlow 8s linear infinite;
+    }
+
+    @keyframes riverFlow {
+      0% {
+        transform: translateX(-25%);
+      }
+      100% {
+        transform: translateX(0%);
+      }
+    }
+
+    .content-section {
+      position: relative;
+      min-height: 100vh;
+      padding: 4rem 2rem;
+      z-index: 5;
+    }
+
+    .cards-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20rem;
+      padding-top: 25vh;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .experience-card {
+      width: 100%;
+      max-width: 500px;
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 20px;
+      padding: 3rem 2.5rem;
+      box-shadow: var(--shadow-card);
+      border: 1px solid rgba(123, 168, 156, 0.15);
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .experience-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--color-secondary), var(--color-primary), var(--color-secondary));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+
+    .experience-card:hover::before {
+      opacity: 1;
+    }
+
+    .experience-card:nth-child(1) {
+      margin-top: 10vh;
+    }
+
+    .experience-card:nth-child(2) {
+      margin-left: 60px;
+    }
+
+    .experience-card:nth-child(3) {
+      margin-left: 120px;
+    }
+
+    .experience-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 40px rgba(44, 62, 58, 0.12);
+    }
+
+    .card-icon {
+      width: 64px;
+      height: 64px;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, var(--color-secondary) 0%, var(--color-primary) 100%);
+      border-radius: 16px;
+      color: var(--color-white);
+      font-size: 1.8rem;
+    }
+
+    .card-title {
+      font-family: 'ZCOOL XiaoWei', serif;
+      font-size: 1.8rem;
+      color: var(--color-ink);
+      margin-bottom: 1rem;
+      letter-spacing: 0.1em;
+    }
+
+    .card-description {
+      font-size: 0.95rem;
+      color: var(--color-ink-light);
+      line-height: 2;
+      margin-bottom: 1.5rem;
+    }
+
+    .card-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--color-primary);
+      font-size: 0.9rem;
+      text-decoration: none;
+      transition: gap 0.3s ease;
+    }
+
+    .card-link:hover {
+      gap: 1rem;
+    }
+
+    .card-link svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .reservation-section {
+      padding: 8rem 2rem;
+      text-align: center;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .reservation-title {
+      font-family: 'ZCOOL XiaoWei', serif;
+      font-size: 2.2rem;
+      color: var(--color-ink);
+      margin-bottom: 1rem;
+      letter-spacing: 0.15em;
+    }
+
+    .reservation-subtitle {
+      color: var(--color-ink-light);
+      margin-bottom: 2.5rem;
+      font-size: 1rem;
+    }
+
+    .reservation-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 1rem 2.5rem;
+      background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-secondary) 100%);
+      color: var(--color-white);
+      border: none;
+      border-radius: 50px;
+      font-family: 'Noto Serif SC', serif;
+      font-size: 1.1rem;
+      letter-spacing: 0.1em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 20px rgba(123, 168, 156, 0.3);
+    }
+
+    .reservation-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 30px rgba(123, 168, 156, 0.4);
+    }
+
+    .reservation-btn svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .footer {
+      padding: 3rem 2rem;
+      text-align: center;
+      color: var(--color-ink-light);
+      font-size: 0.85rem;
+      border-top: 1px solid rgba(123, 168, 156, 0.2);
+    }
+
+    .footer span {
+      color: var(--color-primary);
+    }
+
+    @media (max-width: 768px) {
+      .main-title {
+        letter-spacing: 0.3em;
+      }
+
+      .subtitle {
+        padding: 0 1rem;
+      }
+
+      .experience-card:nth-child(2),
+      .experience-card:nth-child(3) {
+        margin-left: 0;
+      }
+
+      .experience-card {
+        padding: 2rem 1.5rem;
+      }
+
+      .card-title {
+        font-size: 1.5rem;
+      }
+
+      .river-axis {
+        width: 2px;
+      }
+    }
+
+    .ambient-element {
+      position: fixed;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .floating-leaf {
+      width: 20px;
+      height: 20px;
+      background: var(--color-secondary);
+      opacity: 0.15;
+      border-radius: 50% 0 50% 0;
+      animation: floatLeaf 15s ease-in-out infinite;
+    }
+
+    .floating-leaf:nth-child(1) {
+      top: 20%;
+      left: 10%;
+      animation-delay: 0s;
+    }
+
+    .floating-leaf:nth-child(2) {
+      top: 60%;
+      right: 15%;
+      animation-delay: -5s;
+    }
+
+    .floating-leaf:nth-child(3) {
+      bottom: 30%;
+      left: 20%;
+      animation-delay: -10s;
+    }
+
+    @keyframes floatLeaf {
+      0%, 100% {
+        transform: translate(0, 0) rotate(0deg);
+      }
+      25% {
+        transform: translate(20px, -30px) rotate(45deg);
+      }
+      50% {
+        transform: translate(-10px, -50px) rotate(90deg);
+      }
+      75% {
+        transform: translate(30px, -20px) rotate(135deg);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="ambient-elements">
+    <div class="ambient-element floating-leaf"></div>
+    <div class="ambient-element floating-leaf"></div>
+    <div class="ambient-element floating-leaf"></div>
+  </div>
+
+  <div class="river-axis" id="riverAxis">
+    <div class="river-line"></div>
+    <div class="river-wave"></div>
+  </div>
+
+  <div class="page-container">
+    <section class="hero-section" id="heroSection">
+      <h1 class="main-title">白渡听香</h1>
+      <p class="subtitle">
+        由四川过湖南去，靠东有一条官路，靠官路旁，有一只渡船。<br>
+        有一个清亮碧绿的蒲潭，渡船靠一根拉索拉引，<br>
+        在翠绿江水中缓缓来。
+      </p>
+      <div class="scroll-hint">
+        <span>向下探索</span>
+        <div class="scroll-icon"></div>
+      </div>
+    </section>
+
+    <section class="content-section">
+      <div class="cards-container">
+        <article class="experience-card" id="card1">
+          <div class="card-icon">◇</div>
+          <h3 class="card-title">苗族银饰</h3>
+          <p class="card-description">
+            传承千年的苗族银饰工艺，精选999纯银，由资深匠人手工锻造。
+            每一片银饰都承载着苗族的历史与祝福，细腻的花纹诉说着古老的传说。
+          </p>
+          <a href="#reservation" class="card-link">
+            了解详情
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </a>
+        </article>
+
+        <article class="experience-card" id="card2">
+          <div class="card-icon">☘</div>
+          <h3 class="card-title">高山茶饮</h3>
+          <p class="card-description">
+            采自湘西海拔千米之上的高山云雾茶，古法炮制，清香淡雅。
+            配以边城独有的山泉水，品一盏茶，读一本《边城》。
+          </p>
+          <a href="#reservation" class="card-link">
+            了解详情
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </a>
+        </article>
+
+        <article class="experience-card" id="card3">
+          <div class="card-icon">✿</div>
+          <h3 class="card-title">调香</h3>
+          <p class="card-description">
+            以边城山水为灵感，融合苗族草本植物精华，调制专属香氛。
+            每一缕香气都是一段故事，带您走进翠翠的渡口时光。
+          </p>
+          <a href="#reservation" class="card-link">
+            了解详情
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M5 12h14M12 5l7 7-7 7"/>
+            </svg>
+          </a>
+        </article>
+      </div>
+
+      <div class="reservation-section" id="reservation">
+        <h2 class="reservation-title">预约体验</h2>
+        <p class="reservation-subtitle">期待与您在边城的渡口相遇</p>
+        <button class="reservation-btn" onclick="handleReservation()">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="3" y="4" width="18" height="18" rx="2" ry="2"/>
+            <line x1="16" y1="2" x2="16" y2="6"/>
+            <line x1="8" y1="2" x2="8" y2="6"/>
+            <line x1="3" y1="10" x2="21" y2="10"/>
+          </svg>
+          立即预约
+        </button>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <p>白渡听香 · 边城主题文化体验店</p>
+      <p style="margin-top: 0.5rem;">地址：上海市宛平南路600号 · <span>白渡听香</span></p>
+    </footer>
+  </div>
+
+  <script>
+    const heroSection = document.getElementById('heroSection');
+    const riverAxis = document.getElementById('riverAxis');
+    const cards = document.querySelectorAll('.experience-card');
+    const reservationSection = document.getElementById('reservation');
+
+    let lastScrollY = 0;
+    let ticking = false;
+
+    function updateOnScroll() {
+      const scrollY = window.scrollY;
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+
+      if (scrollY > 100) {
+        heroSection.classList.add('fade-out');
+        riverAxis.classList.add('visible');
+      } else {
+        heroSection.classList.remove('fade-out');
+        riverAxis.classList.remove('visible');
+      }
+
+      const screenCenter = windowHeight / 2;
+      const maxDistance = windowHeight * 0.8;
+
+      cards.forEach((card) => {
+        const cardRect = card.getBoundingClientRect();
+        const cardCenter = cardRect.top + cardRect.height / 2;
+        const distanceFromCenter = Math.abs(cardCenter - screenCenter);
+        
+        let opacity = 1 - (distanceFromCenter / maxDistance);
+        opacity = Math.max(0.15, Math.min(1, opacity));
+        
+        card.style.opacity = opacity;
+      });
+
+      const reservationRect = reservationSection.getBoundingClientRect();
+      const reservationCenter = reservationRect.top + reservationRect.height / 2;
+      const reservationDistance = Math.abs(reservationCenter - screenCenter);
+      
+      let reservationOpacity = 1 - (reservationDistance / maxDistance);
+      reservationOpacity = Math.max(0.15, Math.min(1, reservationOpacity));
+      
+      reservationSection.style.opacity = reservationOpacity;
+      reservationSection.style.transform = `translateY(${(1 - reservationOpacity) * 40}px)`;
+
+      const progress = Math.min(scrollY / (documentHeight - windowHeight), 1);
+      const riverOpacity = Math.min(progress * 2, 0.6);
+      riverAxis.style.opacity = riverOpacity;
+
+      lastScrollY = scrollY;
+      ticking = false;
+    }
+
+    window.addEventListener('scroll', () => {
+      lastScrollY = window.scrollY;
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          updateOnScroll();
+          ticking = false;
+        });
+        ticking = true;
+      }
+    });
+
+    window.addEventListener('load', () => {
+      updateOnScroll();
+    });
+
+    function handleReservation() {
+      const message = `欢迎来到白渡听香！\n\n您可以选择以下体验项目进行预约：\n\n1. 苗族银饰体验\n2. 高山茶饮品鉴\n3. 调香工作坊\n\n请告诉我们：\n• 您期望的体验时间\n• 体验项目（可多选）\n• 联系信息\n\n我们将尽快与您联系确认预约详情。`;
+
+      if (confirm(message)) {
+        alert('感谢您的预约意向！\n\n您也可以通过以下方式联系我们：\n📞 电话：0743-XXX-XXXX\n📧 邮箱：baidutingxiang@bordertown.com\n\n期待在边城与您相遇！');
+      }
+    }
+
+    const style = document.createElement('style');
+    style.textContent = `
+      .ambient-elements {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+        z-index: 0;
+        overflow: hidden;
+      }
+    `;
+    document.head.appendChild(style);
+  </script>
+</body>
+</html>
