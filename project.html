@@ -54,6 +54,19 @@
       padding: 2rem;
       transition: opacity 0.8s ease-out, transform 0.8s ease-out;
       z-index: 10;
+      background: url('image/标题页.png') center center / cover no-repeat;
+    }
+
+    .hero-section::after {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      bottom: 0;
+      background: linear-gradient(to bottom, rgba(232, 244, 242, 0.3) 0%, rgba(232, 244, 242, 0.9) 100%);
+      pointer-events: none;
+      z-index: 1;
     }
 
     .hero-section.fade-out {
@@ -71,6 +84,8 @@
       text-shadow: 2px 2px 4px rgba(123, 168, 156, 0.2);
       margin-bottom: 2rem;
       animation: titleReveal 1.5s ease-out;
+      position: relative;
+      z-index: 2;
     }
 
     @keyframes titleReveal {
@@ -92,6 +107,8 @@
       opacity: 0;
       animation: subtitleFadeIn 1s ease-out 0.8s forwards;
       font-weight: 400;
+      position: relative;
+      z-index: 2;
     }
 
     @keyframes subtitleFadeIn {
@@ -111,6 +128,7 @@
       gap: 0.5rem;
       opacity: 0;
       animation: scrollHintFade 1s ease-out 1.5s forwards;
+      z-index: 2;
     }
 
     @keyframes scrollHintFade {
